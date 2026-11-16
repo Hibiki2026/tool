@@ -3,370 +3,269 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TAP POWER TOOL BOX</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TAP POWER</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080b14;color:#eef5ff;font-family:system-ui,sans-serif}
-header{text-align:center;padding:25px 12px}
-header h1{margin:0;letter-spacing:3px}
-header p{color:#8998b5;font-size:12px}
-main{max-width:650px;margin:auto;padding:12px 16px 50px}
+body{margin:0;background:#101426;color:#fff;font-family:Arial,sans-serif;transition:.2s}
+body.light{background:#f1f3fa;color:#172033}
+header{text-align:center;padding:25px;background:#202a49}
+h1{margin:0;color:#61e5ff;font-size:34px}
+nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:15px}
+button,select,input{font:inherit;border:0;border-radius:12px;padding:12px}
+button{background:#39466b;color:white;font-weight:bold;cursor:pointer}
+button.active{background:#00a9c7}
+button:disabled{opacity:.4;cursor:not-allowed}
+main{max-width:700px;margin:auto;padding:12px}
 .page{display:none}
-.page.active{display:block;animation:appear .25s}
-@keyframes appear{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:35px}
-.menu button{min-height:160px;border-radius:20px;background:linear-gradient(145deg,#102c48,#111a32);border:1px solid #24466c;color:white}
-.menu button:nth-child(2){background:linear-gradient(145deg,#28205c,#15162f)}
-.menu button:nth-child(3){background:linear-gradient(145deg,#16483f,#112b31)}
-.bigicon{display:block;font-size:42px;margin-bottom:10px}
-.menu strong{display:block;font-size:18px}
-.menu small{color:#a9bad5}
-.panel{background:#111827;border:1px solid #27354d;border-radius:22px;padding:20px;margin-top:15px}
-.back{background:#26364f;color:white;border:0;border-radius:10px;padding:10px 15px;margin-bottom:10px}
-h2{margin:5px 0 18px}
-.center{text-align:center}
-.sub{color:#94a6c4;font-size:13px;text-align:center}
-.timer{font-size:62px;font-weight:900;text-align:center;color:#70e7ff;margin:20px 0;font-variant-numeric:tabular-nums}
-.tap{width:100%;height:160px;border:0;border-radius:22px;background:linear-gradient(135deg,#087eaa,#2456bd);color:white;font-size:35px;font-weight:900;box-shadow:0 7px 0 #063d70}
-.tap:active{transform:translateY(4px);box-shadow:0 2px 0 #063d70}
-.tap:disabled{opacity:.4}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
-.stat{background:#1b2638;border-radius:13px;padding:13px;text-align:center}
-.stat small{display:block;color:#9aabc5}
-.stat strong{font-size:25px;color:#72e7ff}
-.controls{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:17px}
-.controls button{padding:12px 18px;border:0;border-radius:11px;background:#3158bd;color:white}
-.gray{background:#344155!important}
-.red{background:#a33c59!important}
-select,input{background:#1d2b40;color:white;border:1px solid #45617f;border-radius:10px;padding:11px;font:inherit}
-#tapMessage{height:30px;text-align:center;color:#75edc1;margin-top:12px;font-weight:bold}
-.countdown{font-size:76px;font-weight:1000;color:#ffdf70;text-shadow:0 0 25px #ffb52d}
-.rankrow{display:flex;align-items:center;justify-content:space-between;padding:13px;border-bottom:1px solid #29374d;gap:8px}
-.rankleft{display:flex;align-items:center;gap:10px}
-.ranknum{font-size:20px;font-weight:bold;color:#70e7ff;min-width:30px}
-.rankscore{font-weight:bold;color:#75edc1}
-.ranknote{font-size:12px;color:#9aabc5}
-input{width:100%;margin:8px 0}
-#rankStatus{color:#ffcf70;text-align:center;font-size:13px;margin:12px 0}
-.lap{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #29374d}
-@media(max-width:450px){.timer{font-size:48px}.menu button{min-height:140px}}
+.page.show{display:block}
+.panel{background:#202a49;padding:22px;border-radius:20px;margin:14px 0;text-align:center}
+.light .panel{background:white}
+.big{font-size:64px;font-weight:bold;color:#61e5ff;margin:20px}
+.modes{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+input,select{background:#11182c;color:white;margin:5px}
+.light input,.light select{background:#e8ebf4;color:#172033}
+#tapArea{width:100%;height:180px;margin-top:18px;font-size:30px;background:linear-gradient(135deg,#00b8d4,#735cff);touch-action:manipulation}
+table{width:100%;border-collapse:collapse;margin-top:15px}
+td,th{padding:12px;border-bottom:1px solid #65708a}
+footer{text-align:center;padding:25px;opacity:.5}
 </style>
 </head>
 <body>
 <header>
-<h1>⚡ TOOL BOX</h1>
-<p>TAP POWER & STOPWATCH</p>
+<h1>TAP POWER</h1>
+<div>連打力測定 ＆ ストップウォッチ</div>
 </header>
 
+<nav>
+<button class="active" onclick="page('tap',this)">連打測定</button>
+<button onclick="page('ranking',this)">ランキング</button>
+<button onclick="page('watch',this)">ストップウォッチ</button>
+<button onclick="theme()">🌙 / ☀</button>
+</nav>
+
 <main>
-<section id="home" class="page active">
-<div class="center">
-<h2>ツールを選択</h2>
-<p class="sub">使いたい機能を選んでください</p>
+<section id="tap" class="page show">
+<div class="panel">
+<h2>連打力測定</h2>
+<div class="modes">
+<button class="active" onclick="choose(5,this)">5秒</button>
+<button onclick="choose(10,this)">10秒</button>
+<button onclick="choose(30,this)">30秒</button>
+<button onclick="choose(60,this)">60秒</button>
 </div>
-<div class="menu">
-<button onclick="showPage('tapPage')">
-<span class="bigicon">👆</span><strong>連打力測定</strong><small>TAP POWER</small>
-</button>
-<button onclick="showPage('watchPage')">
-<span class="bigicon">⏱️</span><strong>ストップウォッチ</strong><small>STOPWATCH</small>
-</button>
-<button onclick="showPage('rankPage')">
-<span class="bigicon">🏆</span><strong>ランキング</strong><small>ONLINE RANKING</small>
-</button>
+<div class="big" id="count">0</div>
+<div>回数</div>
+<div class="big" id="timer">5.00</div>
+<div id="status">スタートを押してください</div>
+<p><button id="start" onclick="start()">スタート</button>
+<button onclick="reset()">リセット</button></p>
+<button id="tapArea" disabled>ここを連打！</button>
+</div>
+<div class="panel">
+<h3>記録を登録</h3>
+<input id="nickname" maxlength="16" placeholder="ニックネーム">
+<br>
+<button id="submit" onclick="save()" disabled>ランキングに登録</button>
+<div id="message"></div>
 </div>
 </section>
 
-<section id="tapPage" class="page">
-<button class="back" onclick="showPage('home')">← メニュー</button>
+<section id="ranking" class="page">
 <div class="panel">
-<h2>👆 TAP POWER</h2>
-<div class="center">
-<select id="duration">
-<option value="5">5秒モード</option>
-<option value="10" selected>10秒モード</option>
-<option value="30">30秒モード</option>
-<option value="60">60秒モード</option>
+<h2>🏆 オンラインランキング</h2>
+<select id="rankDuration" onchange="loadRanking()">
+<option value="5">5秒</option>
+<option value="10">10秒</option>
+<option value="30">30秒</option>
+<option value="60">60秒</option>
 </select>
-</div>
-<div class="timer" id="tapTime">10.00</div>
-<p class="sub">残り時間</p>
-<button class="tap" id="tapButton" disabled>TAP!</button>
-<div id="tapMessage">STARTを押して測定開始！</div>
-<div class="stats">
-<div class="stat"><small>今回の連打数</small><strong id="tapCount">0</strong></div>
-<div class="stat"><small>連打速度</small><strong id="tapSpeed">0.0</strong><small>回 / 秒</small></div>
-<div class="stat"><small>自己ベスト</small><strong id="tapBest">0</strong></div>
-<div class="stat"><small>経過時間</small><strong id="tapElapsed">0.0</strong></div>
-</div>
-<div class="controls">
-<button id="tapStart">START</button>
-<button class="gray" id="tapReset">RESET</button>
-</div>
+<button onclick="loadRanking()">更新</button>
+<p id="rankStatus">ランキングを読み込みます</p>
+<table>
+<thead><tr><th>順位</th><th>名前</th><th>回数</th></tr></thead>
+<tbody id="rankRows"></tbody>
+</table>
 </div>
 </section>
 
-<section id="rankPage" class="page">
-<button class="back" onclick="showPage('home')">← メニュー</button>
+<section id="watch" class="page">
 <div class="panel">
-<h2>🏆 連打力ランキング</h2>
-<p class="sub">連打力測定の記録だけを掲載します</p>
-<label>ランキングに表示するニックネーム</label>
-<input id="nickname" maxlength="12" placeholder="ニックネーム（12文字以内）">
-<div class="controls">
-<button onclick="loadRanking()">ランキング更新</button>
-</div>
-<div id="rankStatus">オンラインランキングの接続設定が必要です。</div>
-<div id="rankList">
-<p class="sub">ランキングはまだ読み込まれていません。</p>
-</div>
-</div>
-</section>
-
-<section id="watchPage" class="page">
-<button class="back" onclick="showPage('home')">← メニュー</button>
-<div class="panel">
-<h2>⏱️ STOPWATCH</h2>
-<div class="timer" id="watchTime">00:00.00</div>
-<p class="sub">1/100秒計測</p>
-<div class="controls">
-<button id="watchStart">START</button>
-<button class="red" id="watchStop">STOP</button>
-<button class="gray" id="watchReset">RESET</button>
-</div>
-<div class="controls"><button id="lapButton">LAP 記録</button></div>
-<div class="laps">
-<h3>📋 LAP HISTORY</h3>
-<div id="lapList" class="center sub">ラップ記録はありません</div>
-</div>
+<h2>ストップウォッチ</h2>
+<div class="big" id="watchDisplay">00:00.00</div>
+<button onclick="watchStart()">スタート</button>
+<button onclick="watchStop()">ストップ</button>
+<button onclick="lap()">ラップ</button>
+<button onclick="watchReset()">リセット</button>
+<h3>ラップ記録</h3>
+<div id="laps"></div>
 </div>
 </section>
 </main>
+<footer>TAP POWER</footer>
 
 <script>
-function showPage(id){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-if(id==='rankPage')loadRanking();
+// オンラインランキングAPIのURLを設定
+const API_URL="https://YOUR-API-SERVICE.onrender.com";
+
+let duration=5,count=0,running=false,finished=false;
+let startTime=0,timer=null,lastScore=null;
+const area=document.getElementById("tapArea");
+
+function page(id,btn){
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("show"));
+ document.getElementById(id).classList.add("show");
+ document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+ if(id==="ranking")loadRanking();
+}
+function theme(){document.body.classList.toggle("light")}
+
+function choose(n,btn){
+ if(running)return;
+ duration=n;
+ document.querySelectorAll(".modes button").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+ reset();
 }
 
-// オンラインランキングAPIの接続先。
-// ランキング用サーバーを作成したらURLを設定する。
-const API_URL='';
-
-let count=0;
-let best=Number(localStorage.getItem('tapBest')||0);
-let running=false,started=false,countdownActive=false;
-let startTime=0,raf=0,countdownTimer=null;
-let duration=10,elapsed=0;
-
-const $=id=>document.getElementById(id);
-$('tapBest').textContent=best;
-
-function updateTap(){
-if(!running)return;
-elapsed=(performance.now()-startTime)/1000;
-let left=Math.max(0,duration-elapsed);
-$('tapTime').textContent=left.toFixed(2);
-$('tapElapsed').textContent=elapsed.toFixed(1);
-$('tapSpeed').textContent=elapsed>0?(count/elapsed).toFixed(1):'0.0';
-if(left<=0){finishTap();return}
-raf=requestAnimationFrame(updateTap);
+function reset(){
+ clearInterval(timer);
+ running=false;finished=false;count=0;lastScore=null;
+ document.getElementById("count").textContent="0";
+ document.getElementById("timer").textContent=duration.toFixed(2);
+ document.getElementById("status").textContent="スタートを押してください";
+ document.getElementById("start").disabled=false;
+ document.getElementById("submit").disabled=true;
+ document.getElementById("message").textContent="";
+ area.disabled=true;area.textContent="ここを連打！";
 }
 
-function finishTap(){
-running=false;
-cancelAnimationFrame(raf);
-$('tapTime').textContent='0.00';
-$('tapMessage').textContent='🎉 測定終了！ '+count+' 回！';
-if(count>best){
-best=count;
-localStorage.setItem('tapBest',best);
-$('tapBest').textContent=best;
-$('tapMessage').textContent='🏆 NEW RECORD！ '+count+' 回！';
-}
-$('tapStart').disabled=false;
-$('tapStart').textContent='もう一度 START';
-$('tapButton').disabled=true;
-
-// オンライン送信はAPI接続後に有効になる
-if(API_URL && count>0)submitScore(count);
+function start(){
+ if(running)return;
+ reset();
+ document.getElementById("start").disabled=true;
+ let n=3;
+ document.getElementById("status").textContent="3";
+ const cd=setInterval(()=>{
+  n--;
+  if(n>0){document.getElementById("status").textContent=n;return}
+  if(n===0){document.getElementById("status").textContent="GO!";return}
+  clearInterval(cd);
+  begin();
+ },1000);
 }
 
-function beginTapMeasurement(){
-duration=Number($('duration').value);
-startTime=performance.now();
-running=true;
-started=true;
-countdownActive=false;
-$('tapButton').disabled=false;
-$('tapTime').textContent=duration.toFixed(2);
-$('tapMessage').textContent='連打開始！';
-$('tapStart').textContent='測定中...';
-$('tapStart').disabled=true;
-raf=requestAnimationFrame(updateTap);
+function begin(){
+ running=true;finished=false;count=0;
+ startTime=performance.now();
+ area.disabled=false;area.textContent="TAP!";
+ document.getElementById("status").textContent="連打中！";
+ timer=setInterval(()=>{
+  let left=Math.max(0,duration-(performance.now()-startTime)/1000);
+  document.getElementById("timer").textContent=left.toFixed(2);
+  if(left<=0)finish();
+ },20);
 }
 
-$('tapStart').onclick=()=>{
-if(running||countdownActive)return;
-if(started){
-count=0;elapsed=0;started=false;
-$('tapCount').textContent=0;
-$('tapSpeed').textContent='0.0';
-$('tapElapsed').textContent='0.0';
-}
-duration=Number($('duration').value);
-countdownActive=true;
-$('tapButton').disabled=true;
-$('tapStart').disabled=true;
-let steps=['3','2','1','GO!'];
-let index=0;
-
-function showStep(){
-$('tapTime').innerHTML='<span class="countdown">'+steps[index]+'</span>';
-$('tapMessage').textContent=index<3?'スタートまで...':'準備OK！';
-$('tapStart').textContent=steps[index];
-if(index===3){
-countdownTimer=setTimeout(beginTapMeasurement,550);
-}else{
-index++;
-countdownTimer=setTimeout(showStep,1000);
-}
-}
-showStep();
-};
-
-$('tapButton').onclick=()=>{
-if(!running)return;
-count++;
-$('tapCount').textContent=count;
-$('tapSpeed').textContent=(count/Math.max(.01,(performance.now()-startTime)/1000)).toFixed(1);
-};
-
-$('tapReset').onclick=()=>{
-running=false;
-started=false;
-countdownActive=false;
-clearTimeout(countdownTimer);
-cancelAnimationFrame(raf);
-count=0;elapsed=0;
-$('tapButton').disabled=true;
-$('tapStart').disabled=false;
-$('tapStart').textContent='START';
-$('tapCount').textContent=0;
-$('tapSpeed').textContent='0.0';
-$('tapElapsed').textContent='0.0';
-$('tapTime').textContent=Number($('duration').value).toFixed(2);
-$('tapMessage').textContent='STARTを押して測定開始！';
-};
-
-$('duration').onchange=e=>{
-if(!running&&!countdownActive)$('tapTime').textContent=Number(e.target.value).toFixed(2);
-};
-
-// ONLINE RANKING
-async function submitScore(score){
-try{
-const name=$('nickname').value.trim()||'名無し';
-const response=await fetch(API_URL+'/scores',{
-method:'POST',
-headers:{'Content-Type':'application/json'},
-body:JSON.stringify({name,score,duration})
+area.addEventListener("pointerdown",e=>{
+ if(!running)return;
+ e.preventDefault();
+ count++;
+ document.getElementById("count").textContent=count;
 });
-if(!response.ok)throw new Error('送信失敗');
-$('tapMessage').textContent='🏆 オンラインランキングに送信しました！';
-}catch(e){
-$('tapMessage').textContent='ランキング送信に失敗しました';
+
+function finish(){
+ if(!running)return;
+ running=false;finished=true;clearInterval(timer);
+ lastScore=count;
+ area.disabled=true;area.textContent="終了！";
+ document.getElementById("timer").textContent="0.00";
+ document.getElementById("status").textContent=`結果：${count}回`;
+ document.getElementById("start").disabled=false;
+ document.getElementById("submit").disabled=false;
 }
+
+async function save(){
+ if(!finished||lastScore===null)return;
+ const name=document.getElementById("nickname").value.trim();
+ if(!name){alert("ニックネームを入力してください");return}
+ const btn=document.getElementById("submit");
+ btn.disabled=true;
+ try{
+  const r=await fetch(API_URL+"/scores",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({name,score:lastScore,duration})
+  });
+  if(!r.ok)throw Error();
+  document.getElementById("message").textContent="登録しました！";
+ }catch(e){
+  document.getElementById("message").textContent="登録できません。API設定を確認してください。";
+  btn.disabled=false;
+ }
 }
 
 async function loadRanking(){
-if(!API_URL){
-$('rankStatus').textContent='オンラインランキング用サーバーがまだ接続されていません。';
-$('rankList').innerHTML='<p class="sub">サーバー接続後、みんなの記録がここに表示されます。</p>';
-return;
-}
-$('rankStatus').textContent='ランキング読み込み中...';
-try{
-const response=await fetch(API_URL+'/scores');
-if(!response.ok)throw new Error('読み込み失敗');
-const data=await response.json();
-$('rankStatus').textContent='🏆 オンラインランキング';
-if(!data.length){
-$('rankList').innerHTML='<p class="sub">まだ記録がありません。</p>';
-return;
-}
-$('rankList').innerHTML=data.map((item,i)=>`
-<div class="rankrow">
-<div class="rankleft">
-<span class="ranknum">${i+1}位</span>
-<span>${escapeHTML(item.name)}</span>
-</div>
-<span class="rankscore">${Number(item.score)}回</span>
-</div>`).join('');
-}catch(e){
-$('rankStatus').textContent='ランキングを読み込めませんでした。';
-}
+ const rows=document.getElementById("rankRows");
+ const status=document.getElementById("rankStatus");
+ rows.innerHTML="";
+ status.textContent="読み込み中...";
+ const d=document.getElementById("rankDuration").value;
+ try{
+  const r=await fetch(`${API_URL}/scores?duration=${d}`);
+  if(!r.ok)throw Error();
+  const data=await r.json();
+  if(!data.length){status.textContent="まだ記録がありません";return}
+  status.textContent=`${d}秒ランキング`;
+  data.forEach((v,i)=>{
+   const tr=document.createElement("tr");
+   [i+1,v.name,v.score].forEach(x=>{
+    const td=document.createElement("td");
+    td.textContent=x;
+    tr.appendChild(td);
+   });
+   rows.appendChild(tr);
+  });
+ }catch(e){
+  status.textContent="ランキングサーバーに接続できません";
+ }
 }
 
-function escapeHTML(value){
-return String(value).replace(/[&<>"']/g,c=>({
-'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-}[c]));
-}
-
-// STOPWATCH
-let watchRunning=false,watchStartTime=0,watchElapsed=0,watchFrame=0;
-let laps=[];
-
+// ストップウォッチ
+let watchRunning=false,watchBase=0,watchStartAt=0,frame=null;
 function format(ms){
-let t=Math.floor(ms/10);
-let cs=t%100;
-let sec=Math.floor(t/100)%60;
-let min=Math.floor(t/6000);
-return String(min).padStart(2,'0')+':'+String(sec).padStart(2,'0')+'.'+String(cs).padStart(2,'0');
+ let m=Math.floor(ms/60000);
+ let s=Math.floor(ms/1000)%60;
+ let cs=Math.floor(ms%1000/10);
+ return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(cs).padStart(2,"0")}`;
 }
-function getWatchTime(){
-return watchElapsed+(watchRunning?performance.now()-watchStartTime:0);
+function watchTick(){
+ if(!watchRunning)return;
+ document.getElementById("watchDisplay").textContent=format(watchBase+performance.now()-watchStartAt);
+ frame=requestAnimationFrame(watchTick);
 }
-function drawWatch(){
-$('watchTime').textContent=format(getWatchTime());
-if(watchRunning)watchFrame=requestAnimationFrame(drawWatch);
+function watchStart(){
+ if(watchRunning)return;
+ watchRunning=true;watchStartAt=performance.now();watchTick();
 }
-$('watchStart').onclick=()=>{
-if(watchRunning)return;
-watchStartTime=performance.now();
-watchRunning=true;
-cancelAnimationFrame(watchFrame);
-watchFrame=requestAnimationFrame(drawWatch);
-};
-$('watchStop').onclick=()=>{
-if(!watchRunning)return;
-watchElapsed+=performance.now()-watchStartTime;
-watchRunning=false;
-cancelAnimationFrame(watchFrame);
-$('watchTime').textContent=format(watchElapsed);
-};
-$('watchReset').onclick=()=>{
-watchRunning=false;watchElapsed=0;
-cancelAnimationFrame(watchFrame);
-$('watchTime').textContent='00:00.00';
-laps=[];
-renderLaps();
-};
-$('lapButton').onclick=()=>{
-if(!watchRunning&&watchElapsed===0)return;
-let now=getWatchTime();
-laps.unshift({total:now,split:now-(laps[0]?.total||0)});
-renderLaps();
-};
-function renderLaps(){
-const list=$('lapList');
-if(!laps.length){list.textContent='ラップ記録はありません';return}
-list.innerHTML=laps.map((l,i)=>
-'<div class="lap"><span>LAP '+(laps.length-i)+'</span><span>'+format(l.split)+'</span><strong>'+format(l.total)+'</strong></div>'
-).join('');
+function watchStop(){
+ if(!watchRunning)return;
+ watchBase+=performance.now()-watchStartAt;
+ watchRunning=false;cancelAnimationFrame(frame);
+ document.getElementById("watchDisplay").textContent=format(watchBase);
+}
+function lap(){
+ if(!watchRunning&&!watchBase)return;
+ let value=watchBase+(watchRunning?performance.now()-watchStartAt:0);
+ let div=document.createElement("div");
+ div.textContent=`ラップ ${document.getElementById("laps").children.length+1}：${format(value)}`;
+ document.getElementById("laps").prepend(div);
+}
+function watchReset(){
+ watchStop();watchBase=0;
+ document.getElementById("watchDisplay").textContent="00:00.00";
+ document.getElementById("laps").innerHTML="";
 }
 </script>
 </body>

@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TAP POWER | TOOL BOX</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080b14;color:#eef5ff;font-family:system-ui,sans-serif;min-height:100vh}
+button{cursor:pointer;border:0;font:inherit;color:white}
+header{text-align:center;padding:28px 15px}
+header h1{font-size:27px;letter-spacing:3px;margin:0}
+header p{color:#8998b5;font-size:12px}
+main{max-width:650px;margin:auto;padding:12px 18px 50px}
+.page{display:none}
+.page.active{display:block;animation:appear .3s}
+@keyframes appear{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:40px}
+.menu button{min-height:190px;border-radius:22px;padding:20px;background:linear-gradient(145deg,#102c48,#111a32);border:1px solid #24466c;box-shadow:0 8px 30px #0006}
+.menu button:nth-child(2){background:linear-gradient(145deg,#28205c,#15162f);border-color:#5144a0}
+.bigicon{font-size:48px;display:block;margin-bottom:12px}
+.menu strong{display:block;font-size:20px}
+.menu small{color:#9eb1d0}
+.panel{background:#111827;border:1px solid #27354d;border-radius:22px;padding:22px;margin-top:18px}
+.back{background:#26364f;border-radius:12px;padding:10px 16px;margin-bottom:12px}
+h2{margin:5px 0 18px;font-size:23px}
+.timer{font-size:65px;font-weight:800;text-align:center;color:#70e7ff;font-variant-numeric:tabular-nums;margin:20px 0}
+.sub{text-align:center;color:#94a6c4;font-size:13px}
+.tap{width:100%;height:170px;border-radius:22px;background:linear-gradient(135deg,#087eaa,#2456bd);font-size:35px;font-weight:900;box-shadow:0 7px 0 #063d70;transition:.08s}
+.tap:active{transform:translateY(5px);box-shadow:0 2px 0 #063d70}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.stat{background:#1b2638;border-radius:14px;padding:14px;text-align:center}
+.stat small{display:block;color:#9aabc5}
+.stat strong{font-size:25px;color:#72e7ff}
+.controls{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-top:18px}
+.controls button{padding:12px 18px;border-radius:12px;background:#3158bd}
+.controls .gray{background:#344155}
+.controls .red{background:#a33c59}
+select{background:#1d2b40;color:white;border:1px solid #45617f;border-radius:10px;padding:11px}
+.center{text-align:center}
+.laps{margin-top:18px}
+.lap{display:flex;justify-content:space-between;padding:12px;border-bottom:1px solid #29374d;color:#c6d5ec}
+#tapMessage{height:24px;text-align:center;color:#75edc1;margin-top:12px}
+@media(max-width:450px){.menu{gap:9px}.menu button{padding:12px;min-height:160px}.timer{font-size:49px}}
+</style>
+</head>
+<body>
+<header>
+<h1>⚡ TOOL BOX</h1>
+<p>TAP POWER & STOPWATCH</p>
+</header>
+<main>
+
+<section id="home" class="page active">
+<div class="center">
+<h2>ツールを選択</h2>
+<p class="sub">使いたい機能を選んでください</p>
+</div>
+<div class="menu">
+<button onclick="showPage('tapPage')">
+<span class="bigicon">👆</span>
+<strong>連打力測定</strong>
+<small>TAP POWER</small>
+</button>
+<button onclick="showPage('watchPage')">
+<span class="bigicon">⏱️</span>
+<strong>ストップウォッチ</strong>
+<small>STOPWATCH</small>
+</button>
+</div>
+</section>
+
+<section id="tapPage" class="page">
+<button class="back" onclick="showPage('home')">← メニュー</button>
+<div class="panel">
+<h2>👆 TAP POWER</h2>
+<div class="center">
+<select id="duration">
+<option value="5">5秒モード</option>
+<option value="10" selected>10秒モード</option>
+<option value="30">30秒モード</option>
+<option value="60">60秒モード</option>
+</select>
+</div>
+<div class="timer" id="tapTime">10.00</div>
+<p class="sub">残り時間</p>
+<button class="tap" id="tapButton">TAP!</button>
+<div id="tapMessage">STARTを押して測定開始！</div>
+<div class="stats">
+<div class="stat"><small>今回の連打数</small><strong id="tapCount">0</strong></div>
+<div class="stat"><small>連打速度</small><strong id="tapSpeed">0.0</strong><small>回 / 秒</small></div>
+<div class="stat"><small>最高記録</small><strong id="tapBest">0</strong></div>
+<div class="stat"><small>経過時間</small><strong id="tapElapsed">0.0</strong></div>
+</div>
+<div class="controls">
+<button id="tapStart">START</button>
+<button class="gray" id="tapReset">RESET</button>
+</div>
+</div>
+</section>
+
+<section id="watchPage" class="page">
+<button class="back" onclick="showPage('home')">← メニュー</button>
+<div class="panel">
+<h2>⏱️ STOPWATCH</h2>
+<div class="timer" id="watchTime">00:00.00</div>
+<p class="sub">1/100秒計測</p>
+<div class="controls">
+<button id="watchStart">START</button>
+<button class="red" id="watchStop">STOP</button>
+<button class="gray" id="watchReset">RESET</button>
+</div>
+<div class="controls">
+<button id="lapButton">LAP 記録</button>
+</div>
+<div class="laps">
+<h3>📋 LAP HISTORY</h3>
+<div id="lapList" class="center sub">ラップ記録はありません</div>
+</div>
+</div>
+</section>
+
+</main>
+<script>
+function showPage(id){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+// TAP POWER
+let count=0,best=Number(localStorage.getItem('tapBest')||0);
+let running=false,started=false,startTime=0,raf=0;
+let duration=10,elapsed=0;
+const tapButton=document.getElementById('tapButton');
+const tapStart=document.getElementById('tapStart');
+const tapTime=document.getElementById('tapTime');
+const tapCount=document.getElementById('tapCount');
+const tapSpeed=document.getElementById('tapSpeed');
+const tapBest=document.getElementById('tapBest');
+const tapElapsed=document.getElementById('tapElapsed');
+const tapMessage=document.getElementById('tapMessage');
+
+tapBest.textContent=best;
+
+function updateTap(){
+if(!running)return;
+elapsed=(performance.now()-startTime)/1000;
+let left=Math.max(0,duration-elapsed);
+tapTime.textContent=left.toFixed(2);
+tapElapsed.textContent=elapsed.toFixed(1);
+tapSpeed.textContent=elapsed>0?(count/elapsed).toFixed(1):'0.0';
+if(left<=0){finishTap();return}
+raf=requestAnimationFrame(updateTap);
+}
+function finishTap(){
+running=false;
+cancelAnimationFrame(raf);
+tapTime.textContent='0.00';
+tapMessage.textContent='🎉 測定終了！ '+count+' 回！';
+if(count>best){
+best=count;
+localStorage.setItem('tapBest',best);
+tapBest.textContent=best;
+tapMessage.textContent='🏆 NEW RECORD！ '+count+' 回！';
+}
+tapStart.textContent='もう一度 START';
+}
+tapStart.onclick=()=>{
+if(running)return;
+if(started){
+count=0;elapsed=0;started=false;
+tapCount.textContent=0;
+tapSpeed.textContent='0.0';
+tapElapsed.textContent='0.0';
+}
+duration=Number(document.getElementById('duration').value);
+startTime=performance.now();
+running=true;started=true;
+tapTime.textContent=duration.toFixed(2);
+tapMessage.textContent='連打開始！';
+tapStart.textContent='測定中...';
+raf=requestAnimationFrame(updateTap);
+};
+tapButton.onclick=()=>{
+if(!running)return;
+count++;
+tapCount.textContent=count;
+tapSpeed.textContent=(count/Math.max(.01,(performance.now()-startTime)/1000)).toFixed(1);
+};
+document.getElementById('tapReset').onclick=()=>{
+running=false;started=false;
+cancelAnimationFrame(raf);
+count=0;elapsed=0;
+tapCount.textContent=0;
+tapSpeed.textContent='0.0';
+tapElapsed.textContent='0.0';
+tapTime.textContent=Number(document.getElementById('duration').value).toFixed(2);
+tapStart.textContent='START';
+tapMessage.textContent='STARTを押して測定開始！';
+};
+document.getElementById('duration').onchange=e=>{
+if(!running&&!started)tapTime.textContent=Number(e.target.value).toFixed(2);
+};
+
+// STOPWATCH
+let watchRunning=false,watchStartTime=0,watchElapsed=0,watchFrame=0;
+let laps=[];
+const watchTime=document.getElementById('watchTime');
+function format(ms){
+let t=Math.floor(ms/10);
+let cs=t%100;
+let sec=Math.floor(t/100)%60;
+let min=Math.floor(t/6000);
+return String(min).padStart(2,'0')+':'+String(sec).padStart(2,'0')+'.'+String(cs).padStart(2,'0');
+}
+function getWatchTime(){
+return watchElapsed+(watchRunning?performance.now()-watchStartTime:0);
+}
+function drawWatch(){
+watchTime.textContent=format(getWatchTime());
+if(watchRunning)watchFrame=requestAnimationFrame(drawWatch);
+}
+document.getElementById('watchStart').onclick=()=>{
+if(watchRunning)return;
+watchStartTime=performance.now();
+watchRunning=true;
+cancelAnimationFrame(watchFrame);
+watchFrame=requestAnimationFrame(drawWatch);
+};
+document.getElementById('watchStop').onclick=()=>{
+if(!watchRunning)return;
+watchElapsed+=performance.now()-watchStartTime;
+watchRunning=false;
+cancelAnimationFrame(watchFrame);
+watchTime.textContent=format(watchElapsed);
+};
+document.getElementById('watchReset').onclick=()=>{
+watchRunning=false;watchElapsed=0;
+cancelAnimationFrame(watchFrame);
+watchTime.textContent='00:00.00';
+laps=[];
+renderLaps();
+};
+document.getElementById('lapButton').onclick=()=>{
+if(!watchRunning&&watchElapsed===0)return;
+let now=getWatchTime();
+laps.unshift({total:now,split:now-(laps[0]?.total||0)});
+renderLaps();
+};
+function renderLaps(){
+const list=document.getElementById('lapList');
+if(!laps.length){list.textContent='ラップ記録はありません';return}
+list.innerHTML=laps.map((l,i)=>
+'<div class="lap"><span>LAP '+(laps.length-i)+'</span><span>'+format(l.split)+'</span><strong>'+format(l.total)+'</strong></div>'
+).join('');
+}
+</script>
+</body>
+</html>

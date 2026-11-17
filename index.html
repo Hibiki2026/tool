@@ -30,16 +30,19 @@ textarea{width:100%;min-height:100px;resize:vertical}
 .small{font-size:13px;opacity:.7}
 #rouletteWrap{position:relative;width:min(90vw,440px);aspect-ratio:1;margin:35px auto 20px}
 #wheel{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 15px #0008)}
-/* 矢印の先端を下向きにして円盤を指す */
 #pointer{
  position:absolute;top:-5px;left:50%;transform:translateX(-50%);
  z-index:2;width:0;height:0;
  border-left:17px solid transparent;
  border-right:17px solid transparent;
  border-top:30px solid #fff;
- filter:drop-shadow(0 2px 3px #000);
+ filter:drop-shadow(0 2px 3px #000)
 }
-#spinButton{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:85px;height:85px;border-radius:50%;background:white;color:#202744;border:6px solid #303b5d;font-size:17px;z-index:3}
+#spinButton{
+ position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+ width:85px;height:85px;border-radius:50%;background:white;
+ color:#202744;border:6px solid #303b5d;font-size:17px;z-index:3
+}
 .entry{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin:10px 0}
 .entry input{width:42%;min-width:100px}
 .option-row{display:grid;grid-template-columns:1fr 85px 38px;gap:5px;margin:6px 0}
@@ -49,6 +52,10 @@ textarea{width:100%;min-height:100px;resize:vertical}
 .range-row{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
 .range-row input{width:100px}
 footer{text-align:center;padding:25px;opacity:.5}
+@media(max-width:450px){
+ .option-row{grid-template-columns:1fr 75px 35px}
+ .big{font-size:48px}
+}
 </style>
 </head>
 <body>
@@ -56,105 +63,112 @@ footer{text-align:center;padding:25px;opacity:.5}
 <h1>TAP POWER</h1>
 <div>ゲーム＆便利ツール</div>
 </header>
+
 <nav>
 <button onclick="goHome()">🏠 メニュー</button>
 <button onclick="document.body.classList.toggle('light')">🌙 / ☀</button>
 </nav>
-<main>
 
+<main>
 <section id="home" class="page show">
-<div class="panel">
-<h2>メニュー</h2>
-<div class="menu-grid">
-<button onclick="openPage('tap')">👆<br>連打測定</button>
-<button onclick="openPage('watch')">⏱️<br>ストップウォッチ</button>
-<button onclick="openPage('roulette')">🎡<br>ルーレット</button>
-</div>
-</div>
+ <div class="panel">
+  <h2>メニュー</h2>
+  <div class="menu-grid">
+   <button onclick="openPage('tap')">👆<br>連打測定</button>
+   <button onclick="openPage('watch')">⏱️<br>ストップウォッチ</button>
+   <button onclick="openPage('roulette')">🎡<br>ルーレット</button>
+  </div>
+ </div>
 </section>
 
 <section id="tap" class="page">
-<div class="panel">
-<h2>連打力測定</h2>
-<div class="modes">
-<button onclick="choose(5,this)">5秒</button>
-<button onclick="choose(10,this)">10秒</button>
-<button onclick="choose(30,this)">30秒</button>
-<button onclick="choose(60,this)">60秒</button>
-</div>
-<div class="big" id="count">0</div>
-<div>回数</div>
-<div class="big" id="timer">5.00</div>
-<div id="status">スタートを押してください</div>
-<p><button id="start" onclick="startTap()">スタート</button>
-<button onclick="resetTap()">リセット</button></p>
-<button id="tapArea" disabled>ここを連打！</button>
-</div>
+ <div class="panel">
+  <h2>連打力測定</h2>
+  <div class="modes">
+   <button onclick="choose(5)">5秒</button>
+   <button onclick="choose(10)">10秒</button>
+   <button onclick="choose(30)">30秒</button>
+   <button onclick="choose(60)">60秒</button>
+  </div>
+  <div class="big" id="count">0</div>
+  <div>回数</div>
+  <div class="big" id="timer">5.00</div>
+  <div id="status">スタートを押してください</div>
+  <p>
+   <button id="start" onclick="startTap()">スタート</button>
+   <button onclick="resetTap()">リセット</button>
+  </p>
+  <button id="tapArea" disabled>ここを連打！</button>
+ </div>
 </section>
 
 <section id="watch" class="page">
-<div class="panel">
-<h2>ストップウォッチ</h2>
-<div class="big" id="watchDisplay">00:00.00</div>
-<button onclick="watchStart()">スタート</button>
-<button onclick="watchStop()">ストップ</button>
-<button onclick="lap()">ラップ</button>
-<button onclick="watchReset()">リセット</button>
-<h3>ラップ記録</h3>
-<div id="laps"></div>
-</div>
+ <div class="panel">
+  <h2>ストップウォッチ</h2>
+  <div class="big" id="watchDisplay">00:00.00</div>
+  <button onclick="watchStart()">スタート</button>
+  <button onclick="watchStop()">ストップ</button>
+  <button onclick="lap()">ラップ</button>
+  <button onclick="watchReset()">リセット</button>
+  <h3>ラップ記録</h3>
+  <div id="laps"></div>
+ </div>
 </section>
 
 <section id="roulette" class="page">
-<div class="panel">
-<h2>🎡 ルーレット</h2>
-<p class="small">最大50項目まで登録できます。</p>
+ <div class="panel">
+  <h2>🎡 ルーレット</h2>
+  <p class="small">最大50項目まで登録できます。</p>
 
-<div class="panel">
-<h3>名前で追加</h3>
-<div class="entry">
-<input id="newName" placeholder="名前・項目">
-<input id="newPercent" type="number" min="0" max="100" step="any" placeholder="確率％">
-</div>
-<button onclick="addNamed()">名前と確率を追加</button>
-<p class="small">確率を全員空欄にすると均等になります。<br>確率を指定する場合は合計100％にしてください。</p>
-</div>
+  <div class="panel">
+   <h3>名前で追加</h3>
+   <div class="entry">
+    <input id="newName" placeholder="名前・項目">
+    <input id="newPercent" type="number" min="0" max="100" step="any" placeholder="確率％">
+   </div>
+   <button onclick="addNamed()">名前と確率を追加</button>
+   <p class="small">確率を全員空欄にすると均等になります。<br>確率を指定する場合は合計100％にしてください。</p>
+  </div>
 
-<div class="panel">
-<h3>複数の名前をまとめて追加</h3>
-<textarea id="bulkItems" placeholder="りんご&#10;みかん&#10;ぶどう"></textarea>
-<button onclick="addBulk()">まとめて追加</button>
-<p class="small">まとめて追加した項目は確率未指定（均等）になります。</p>
-</div>
+  <div class="panel">
+   <h3>複数の名前をまとめて追加</h3>
+   <textarea id="bulkItems" placeholder="りんご&#10;みかん&#10;ぶどう"></textarea>
+   <button onclick="addBulk()">まとめて追加</button>
+   <p class="small">まとめて追加した項目は確率未指定（均等）になります。</p>
+  </div>
 
-<div class="panel">
-<h3>数字の範囲で作成</h3>
-<div class="range-row">
-<span>開始</span><input type="number" id="rangeFrom" value="1">
-<span>～</span><input type="number" id="rangeTo" value="10">
-</div>
-<button onclick="addRange()">数字を追加</button>
-<p class="small">数字は1～10のように指定できます。数字の抽選は均等です。</p>
-</div>
+  <div class="panel">
+   <h3>数字の範囲で作成</h3>
+   <div class="range-row">
+    <span>開始</span><input type="number" id="rangeFrom" value="1">
+    <span>～</span><input type="number" id="rangeTo" value="10">
+   </div>
+   <button onclick="addRange()">数字を追加</button>
+   <p class="small">数字は1～10のように指定できます。数字は均等抽選です。</p>
+  </div>
 
-<h3>登録項目</h3>
-<div id="options"></div>
-<p id="optionCount">0 / 50 項目</p>
-<button onclick="clearOptions()">全部削除</button>
+  <div id="nameListArea">
+   <h3>登録項目</h3>
+   <div id="options"></div>
+   <p id="optionCount">0 / 50 項目</p>
+  </div>
 
-<div id="rouletteWrap">
-<div id="pointer"></div>
-<canvas id="wheel" width="600" height="600"></canvas>
-<button id="spinButton" onclick="spin()">START</button>
-</div>
-<div class="result" id="rouletteResult">結果はここに表示されます</div>
-</div>
+  <button onclick="clearOptions()">全部削除</button>
+
+  <div id="rouletteWrap">
+   <div id="pointer"></div>
+   <canvas id="wheel" width="600" height="600"></canvas>
+   <button id="spinButton" onclick="spin()">START</button>
+  </div>
+
+  <div class="result" id="rouletteResult">結果はここに表示されます</div>
+ </div>
 </section>
 </main>
 <footer>TAP POWER</footer>
 
 <script>
-// ページ切り替え
+// ページ
 function openPage(id){
  document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
  document.getElementById(id).classList.add("show");
@@ -165,18 +179,21 @@ function goHome(){openPage("home")}
 // 連打測定
 let duration=5,count=0,running=false,tapStart=0,tapTimer=null;
 const tapArea=document.getElementById("tapArea");
-function choose(n,btn){
+
+function choose(n){
  if(running)return;
  duration=n;
  resetTap();
 }
 function resetTap(){
- clearInterval(tapTimer);running=false;count=0;
+ clearInterval(tapTimer);
+ running=false;count=0;
  document.getElementById("count").textContent="0";
  document.getElementById("timer").textContent=duration.toFixed(2);
  document.getElementById("status").textContent="スタートを押してください";
  document.getElementById("start").disabled=false;
- tapArea.disabled=true;tapArea.textContent="ここを連打！";
+ tapArea.disabled=true;
+ tapArea.textContent="ここを連打！";
 }
 function startTap(){
  if(running)return;
@@ -186,21 +203,30 @@ function startTap(){
  document.getElementById("status").textContent="3";
  const cd=setInterval(()=>{
   n--;
-  if(n>0){document.getElementById("status").textContent=n;return}
-  if(n===0){document.getElementById("status").textContent="GO!";return}
-  clearInterval(cd);beginTap();
+  if(n>0){
+   document.getElementById("status").textContent=n;
+   return;
+  }
+  if(n===0){
+   document.getElementById("status").textContent="GO!";
+   return;
+  }
+  clearInterval(cd);
+  beginTap();
  },1000);
 }
 function beginTap(){
  running=true;count=0;tapStart=performance.now();
- tapArea.disabled=false;tapArea.textContent="TAP!";
+ tapArea.disabled=false;
+ tapArea.textContent="TAP!";
  document.getElementById("status").textContent="連打中！";
  tapTimer=setInterval(()=>{
   const left=Math.max(0,duration-(performance.now()-tapStart)/1000);
   document.getElementById("timer").textContent=left.toFixed(2);
   if(left<=0){
    running=false;clearInterval(tapTimer);
-   tapArea.disabled=true;tapArea.textContent="終了！";
+   tapArea.disabled=true;
+   tapArea.textContent="終了！";
    document.getElementById("status").textContent=`結果：${count}回`;
    document.getElementById("start").disabled=false;
   }
@@ -208,14 +234,17 @@ function beginTap(){
 }
 tapArea.addEventListener("pointerdown",e=>{
  if(!running)return;
- e.preventDefault();count++;
+ e.preventDefault();
+ count++;
  document.getElementById("count").textContent=count;
 });
 
 // ストップウォッチ
 let watchRunning=false,watchBase=0,watchStartAt=0,watchFrame=null;
 function formatTime(ms){
- const m=Math.floor(ms/60000),s=Math.floor(ms/1000)%60,cs=Math.floor(ms%1000/10);
+ const m=Math.floor(ms/60000);
+ const s=Math.floor(ms/1000)%60;
+ const cs=Math.floor(ms%1000/10);
  return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(cs).padStart(2,"0")}`;
 }
 function watchTick(){
@@ -225,11 +254,14 @@ function watchTick(){
 }
 function watchStart(){
  if(watchRunning)return;
- watchRunning=true;watchStartAt=performance.now();watchTick();
+ watchRunning=true;
+ watchStartAt=performance.now();
+ watchTick();
 }
 function watchStop(){
  if(!watchRunning)return;
- watchBase+=performance.now()-watchStartAt;watchRunning=false;
+ watchBase+=performance.now()-watchStartAt;
+ watchRunning=false;
  cancelAnimationFrame(watchFrame);
  document.getElementById("watchDisplay").textContent=formatTime(watchBase);
 }
@@ -241,101 +273,126 @@ function lap(){
  document.getElementById("laps").prepend(div);
 }
 function watchReset(){
- watchStop();watchBase=0;
+ watchStop();
+ watchBase=0;
  document.getElementById("watchDisplay").textContent="00:00.00";
  document.getElementById("laps").innerHTML="";
 }
 
 // ルーレット
 const MAX_ITEMS=50;
-const COLORS=["#ff5252","#ff9800","#ffeb3b","#8bc34a","#00bcd4","#2196f3","#673ab7","#e91e63","#ff7043","#26a69a","#ab47bc","#42a5f5","#d4e157","#ec407a","#7e57c2","#26c6da","#ffa726","#66bb6a"];
-let items=[],angle=0,spinning=false;
+const COLORS=[
+ "#ff5252","#ff9800","#ffeb3b","#8bc34a","#00bcd4",
+ "#2196f3","#673ab7","#e91e63","#ff7043","#26a69a",
+ "#ab47bc","#42a5f5","#d4e157","#ec407a","#7e57c2",
+ "#26c6da","#ffa726","#66bb6a"
+];
+
+let items=[];
+let angle=0;
+let spinning=false;
+let numberMode=false;
+
 const canvas=document.getElementById("wheel");
 const ctx=canvas.getContext("2d");
 
+// 名前追加
 function addNamed(){
  const name=document.getElementById("newName").value.trim();
  const percent=document.getElementById("newPercent").value.trim();
+
  if(!name){alert("名前を入力してください");return}
+ if(numberMode){alert("数字ルーレットをリセットしてから追加してください");return}
  if(items.length>=MAX_ITEMS){alert("最大50項目です");return}
+
  if(percent!==""&&(!Number.isFinite(Number(percent))||Number(percent)<0||Number(percent)>100)){
-  alert("確率は0～100で入力してください");return;
+  alert("確率は0～100で入力してください");
+  return;
  }
+
  items.push({name,percent,number:false});
  document.getElementById("newName").value="";
  document.getElementById("newPercent").value="";
  renderOptions();
+ document.getElementById("newName").focus();
 }
+
+// Enterで追加
+["newName","newPercent"].forEach(id=>{
+ document.getElementById(id).addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+   e.preventDefault();
+   addNamed();
+  }
+ });
+});
+
+// まとめて追加
 function addBulk(){
- const lines=document.getElementById("bulkItems").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ const lines=document.getElementById("bulkItems").value
+  .split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+
  if(!lines.length){alert("名前を入力してください");return}
+ if(numberMode){alert("数字ルーレットをリセットしてから追加してください");return}
  if(items.length+lines.length>MAX_ITEMS){alert("最大50項目です");return}
+
  lines.forEach(name=>items.push({name,percent:"",number:false}));
  document.getElementById("bulkItems").value="";
  renderOptions();
 }
+
+// 数字の範囲
 function addRange(){
  const from=Number(document.getElementById("rangeFrom").value);
  const to=Number(document.getElementById("rangeTo").value);
+
  if(!Number.isSafeInteger(from)||!Number.isSafeInteger(to)||to<from){
-  alert("数字の範囲を正しく入力してください");return;
+  alert("数字の範囲を正しく入力してください");
+  return;
  }
+
  const amount=to-from+1;
- if(amount>MAX_ITEMS||items.length+amount>MAX_ITEMS){
-  alert("最大50項目です");return;
+ if(amount>MAX_ITEMS){
+  alert("数字は最大50個までです");
+  return;
  }
- for(let n=from;n<=to;n++)items.push({name:String(n),percent:"",number:true});
+
+ items=[];
+ numberMode=true;
+
+ for(let n=from;n<=to;n++){
+  items.push({name:String(n),percent:"",number:true});
+ }
+
+ document.getElementById("nameListArea").style.display="none";
  renderOptions();
+ document.getElementById("rouletteResult").textContent="数字ルーレットの準備完了";
 }
+
+// 項目削除
 function removeItem(i){
  if(spinning)return;
- items.splice(i,1);renderOptions();
+ items.splice(i,1);
+ if(!items.length)numberMode=false;
+ renderOptions();
 }
+
+// 全削除
 function clearOptions(){
  if(spinning)return;
- items=[];angle=0;renderOptions();
+ items=[];
+ numberMode=false;
+ angle=0;
+ document.getElementById("nameListArea").style.display="block";
+ renderOptions();
  document.getElementById("rouletteResult").textContent="結果はここに表示されます";
 }
-function renderOptions(){
- const box=document.getElementById("options");
- box.innerHTML="";
- items.forEach((item,i)=>{
-  const row=document.createElement("div");row.className="option-row";
-  const name=document.createElement("input");
-  name.value=item.name;name.placeholder="項目名";name.maxLength=40;
-  name.addEventListener("input",()=>{items[i].name=name.value;drawWheel()});
-  row.appendChild(name);
 
-  if(!item.number){
-   const pct=document.createElement("input");
-   pct.type="number";pct.min="0";pct.max="100";pct.step="any";
-   pct.placeholder="%";pct.value=item.percent;
-   pct.addEventListener("input",()=>{items[i].percent=pct.value});
-   row.appendChild(pct);
-  }else{
-   const label=document.createElement("span");
-   label.textContent="均等";
-   label.style.alignSelf="center";
-   row.appendChild(label);
-  }
-
-  const del=document.createElement("button");
-  del.textContent="×";del.onclick=()=>removeItem(i);
-  row.appendChild(del);
-  box.appendChild(row);
- });
- document.getElementById("optionCount").textContent=items.length+" / 50 項目";
- drawWheel();
-}
+// 確率計算
 function probabilities(){
  if(!items.length)throw Error("項目を登録してください");
 
- // 数字だけのルーレットなら全項目を均等抽選
- const allNumbers=items.every(x=>x.number);
- if(allNumbers)return items.map(()=>1/items.length);
-
- // 数字と名前が混ざっている場合は均等抽選にする
- if(items.some(x=>x.number))return items.map(()=>1/items.length);
+ if(numberMode)return items.map(()=>1/items.length);
 
  const specified=items.some(x=>x.percent.trim()!=="");
  if(!specified)return items.map(()=>1/items.length);
@@ -344,51 +401,131 @@ function probabilities(){
  if(vals.some(x=>!Number.isFinite(x)||x<0||x>100)){
   throw Error("確率は0～100で入力してください");
  }
+
  const total=vals.reduce((a,b)=>a+b,0);
  if(Math.abs(total-100)>0.001){
-  throw Error("指定した確率の合計を100％にしてください");
+  throw Error("確率の合計を100％にしてください");
  }
  if(total===0)throw Error("確率を入力してください");
+
  return vals.map(x=>x/total);
 }
 
+// 項目一覧
+function renderOptions(){
+ const box=document.getElementById("options");
+ box.innerHTML="";
+
+ if(!numberMode){
+  items.forEach((item,i)=>{
+   const row=document.createElement("div");
+   row.className="option-row";
+
+   const name=document.createElement("input");
+   name.value=item.name;
+   name.maxLength=40;
+   name.addEventListener("input",()=>{
+    items[i].name=name.value;
+    drawWheel();
+   });
+
+   const pct=document.createElement("input");
+   pct.type="number";
+   pct.min="0";pct.max="100";pct.step="any";
+   pct.placeholder="%";
+   pct.value=item.percent;
+   pct.addEventListener("input",()=>{
+    items[i].percent=pct.value;
+    drawWheel();
+   });
+
+   const del=document.createElement("button");
+   del.textContent="×";
+   del.onclick=()=>removeItem(i);
+
+   row.append(name,pct,del);
+   box.appendChild(row);
+  });
+ }
+
+ document.getElementById("optionCount").textContent=items.length+" / 50 項目";
+ drawWheel();
+}
+
+// 円盤描画
 function drawWheel(){
  ctx.clearRect(0,0,600,600);
+
  if(!items.length){
-  ctx.beginPath();ctx.arc(300,300,290,0,Math.PI*2);
-  ctx.fillStyle="#39466b";ctx.fill();
-  ctx.fillStyle="white";ctx.font="28px Arial";
-  ctx.textAlign="center";ctx.fillText("項目を追加",300,310);
+  ctx.beginPath();
+  ctx.arc(300,300,290,0,Math.PI*2);
+  ctx.fillStyle="#39466b";
+  ctx.fill();
+  ctx.fillStyle="white";
+  ctx.font="28px Arial";
+  ctx.textAlign="center";
+  ctx.fillText("項目を追加",300,310);
   return;
  }
+
  let probs;
- try{probs=probabilities()}catch(e){probs=items.map(()=>1/items.length)}
+ try{probs=probabilities()}
+ catch(e){probs=items.map(()=>1/items.length)}
+
  let a=-Math.PI/2+angle;
+
  items.forEach((item,i)=>{
   const span=Math.PI*2*probs[i];
   if(span<=0)return;
-  ctx.beginPath();ctx.moveTo(300,300);
+
+  ctx.beginPath();
+  ctx.moveTo(300,300);
   ctx.arc(300,300,290,a,a+span);
   ctx.closePath();
   ctx.fillStyle=COLORS[i%COLORS.length];
   ctx.fill();
-  ctx.strokeStyle="white";ctx.lineWidth=3;ctx.stroke();
+  ctx.strokeStyle="white";
+  ctx.lineWidth=3;
+  ctx.stroke();
 
+  // 扇形の中央に項目名を表示
   ctx.save();
   ctx.translate(300,300);
   ctx.rotate(a+span/2);
-  ctx.textAlign="right";ctx.textBaseline="middle";
-  ctx.fillStyle="#172033";ctx.font="bold 20px Arial";
+  ctx.textAlign="right";
+  ctx.textBaseline="middle";
+  ctx.fillStyle="#172033";
+  ctx.font="bold 20px Arial";
+
   let label=item.name;
   if(label.length>12)label=label.slice(0,11)+"…";
   ctx.fillText(label,270,0);
   ctx.restore();
+
+  // 割合を表示
+  if(span>0.20){
+   ctx.save();
+   ctx.translate(300,300);
+   ctx.rotate(a+span/2);
+   ctx.textAlign="right";
+   ctx.textBaseline="middle";
+   ctx.fillStyle="#172033";
+   ctx.font="bold 15px Arial";
+   ctx.fillText((probs[i]*100).toFixed(1)+"%",270,23);
+   ctx.restore();
+  }
+
   a+=span;
  });
- ctx.beginPath();ctx.arc(300,300,35,0,Math.PI*2);
- ctx.fillStyle="white";ctx.fill();
+
+ // 中央
+ ctx.beginPath();
+ ctx.arc(300,300,35,0,Math.PI*2);
+ ctx.fillStyle="white";
+ ctx.fill();
 }
 
+// 当選者抽選
 function chooseWinner(probs){
  let r=Math.random(),sum=0;
  for(let i=0;i<probs.length;i++){
@@ -397,26 +534,31 @@ function chooseWinner(probs){
  }
  return probs.length-1;
 }
+
+// 回転
 function spin(){
  if(spinning)return;
+
  let probs;
- try{probs=probabilities()}catch(e){alert(e.message);return}
+ try{probs=probabilities()}
+ catch(e){alert(e.message);return}
 
  spinning=true;
  document.getElementById("spinButton").disabled=true;
  document.getElementById("rouletteResult").textContent="回転中...";
 
  const winner=chooseWinner(probs);
+
+ // 選ばれた扇形の中央を矢印の位置に合わせる
  let before=0;
  for(let i=0;i<winner;i++)before+=probs[i]*Math.PI*2;
- const middle=before+probs[winner]*Math.PI;
 
- // 扇形の中心が真上の矢印に来る角度
+ const middle=before+probs[winner]*Math.PI;
  const target=-middle;
  const current=angle;
- const fullTurns=8+Math.floor(Math.random()*4);
+ const turns=8+Math.floor(Math.random()*4);
  const delta=((target-current)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
- const end=current+fullTurns*Math.PI*2+delta;
+ const end=current+turns*Math.PI*2+delta;
 
  const start=performance.now();
  const durationMs=5000;
@@ -432,6 +574,7 @@ function spin(){
   }else{
    angle=((angle%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
    drawWheel();
+
    spinning=false;
    document.getElementById("spinButton").disabled=false;
 
@@ -440,8 +583,10 @@ function spin(){
     `🎉 当選：${winner+1}番　${selected.name} 🎉`;
   }
  }
+
  requestAnimationFrame(animate);
 }
+
 renderOptions();
 </script>
 </body>

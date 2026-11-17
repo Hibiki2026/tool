@@ -7,45 +7,64 @@
 <title>TAP POWER</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#101426;color:#fff;font-family:Arial,sans-serif;transition:.2s}
+body{margin:0;background:#101426;color:white;font-family:Arial,sans-serif;transition:.2s}
 body.light{background:#f1f3fa;color:#172033}
-header{text-align:center;padding:25px;background:#202a49}
-h1{margin:0;color:#61e5ff;font-size:34px}
-nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:15px}
-button,select,input{font:inherit;border:0;border-radius:12px;padding:12px}
+header{text-align:center;padding:22px;background:#202a49}
+h1{margin:0;color:#61e5ff;font-size:32px}
+nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:12px}
+button,input,textarea{font:inherit;border:0;border-radius:12px;padding:11px}
 button{background:#39466b;color:white;font-weight:bold;cursor:pointer}
-button.active{background:#00a9c7}
 button:disabled{opacity:.4;cursor:not-allowed}
-main{max-width:700px;margin:auto;padding:12px}
+main{max-width:850px;margin:auto;padding:12px}
 .page{display:none}
 .page.show{display:block}
-.panel{background:#202a49;padding:22px;border-radius:20px;margin:14px 0;text-align:center}
+.panel{background:#202a49;padding:20px;border-radius:20px;margin:14px 0;text-align:center}
 .light .panel{background:white}
-.big{font-size:64px;font-weight:bold;color:#61e5ff;margin:20px}
-.modes{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-input,select{background:#11182c;color:white;margin:5px}
-.light input,.light select{background:#e8ebf4;color:#172033}
-#tapArea{width:100%;height:180px;margin-top:18px;font-size:30px;background:linear-gradient(135deg,#00b8d4,#735cff);touch-action:manipulation}
-table{width:100%;border-collapse:collapse;margin-top:15px}
-td,th{padding:12px;border-bottom:1px solid #65708a}
+.big{font-size:60px;font-weight:bold;color:#61e5ff;margin:20px}
+.modes,.menu-grid{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.menu-grid button{width:45%;min-width:135px;min-height:95px;font-size:18px}
+input,textarea{background:#11182c;color:white;margin:5px;max-width:100%}
+.light input,.light textarea{background:#e8ebf4;color:#172033}
+#tapArea{width:100%;height:170px;font-size:30px;background:linear-gradient(135deg,#00b8d4,#735cff);touch-action:manipulation}
+textarea{width:100%;min-height:130px;resize:vertical;text-align:left}
+.small{font-size:13px;opacity:.7}
+#rouletteWrap{position:relative;width:min(90vw,440px);aspect-ratio:1;margin:25px auto}
+#wheel{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 15px #0008)}
+#pointer{position:absolute;top:-13px;left:50%;transform:translateX(-50%);z-index:2;width:0;height:0;border-left:17px solid transparent;border-right:17px solid transparent;border-bottom:30px solid white}
+#spinButton{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:85px;height:85px;border-radius:50%;background:white;color:#202744;border:6px solid #303b5d;font-size:17px;z-index:3}
+.option-row{display:grid;grid-template-columns:1fr 90px 38px;gap:5px;margin:6px 0}
+.option-row input{width:100%;min-width:0;margin:0}
+.option-row button{padding:6px}
+.result{font-size:28px;font-weight:bold;color:#ffdf64;min-height:42px;margin:15px}
+.range-row{display:flex;gap:8px;justify-content:center;align-items:center;flex-wrap:wrap}
+.range-row input{width:110px}
 footer{text-align:center;padding:25px;opacity:.5}
+@media(max-width:450px){.option-row{grid-template-columns:1fr 75px 35px}.big{font-size:48px}}
 </style>
 </head>
 <body>
 <header>
 <h1>TAP POWER</h1>
-<div>連打力測定 ＆ ストップウォッチ</div>
+<div>ゲーム＆便利ツール</div>
 </header>
-
 <nav>
-<button class="active" onclick="page('tap',this)">連打測定</button>
-<button onclick="page('ranking',this)">ランキング</button>
-<button onclick="page('watch',this)">ストップウォッチ</button>
+<button onclick="goHome()">🏠 メニュー</button>
 <button onclick="theme()">🌙 / ☀</button>
 </nav>
-
 <main>
-<section id="tap" class="page show">
+
+<section id="home" class="page show">
+<div class="panel">
+<h2>メニュー</h2>
+<div class="menu-grid">
+<button onclick="openPage('tap')">👆<br>連打測定</button>
+<button onclick="openPage('watch')">⏱️<br>ストップウォッチ</button>
+<button onclick="openPage('roulette')">🎡<br>ルーレット</button>
+</div>
+</div>
+</section>
+
+<section id="tap" class="page">
 <div class="panel">
 <h2>連打力測定</h2>
 <div class="modes">
@@ -58,34 +77,9 @@ footer{text-align:center;padding:25px;opacity:.5}
 <div>回数</div>
 <div class="big" id="timer">5.00</div>
 <div id="status">スタートを押してください</div>
-<p><button id="start" onclick="start()">スタート</button>
-<button onclick="reset()">リセット</button></p>
+<p><button id="start" onclick="startTap()">スタート</button>
+<button onclick="resetTap()">リセット</button></p>
 <button id="tapArea" disabled>ここを連打！</button>
-</div>
-<div class="panel">
-<h3>記録を登録</h3>
-<input id="nickname" maxlength="16" placeholder="ニックネーム">
-<br>
-<button id="submit" onclick="save()" disabled>ランキングに登録</button>
-<div id="message"></div>
-</div>
-</section>
-
-<section id="ranking" class="page">
-<div class="panel">
-<h2>🏆 オンラインランキング</h2>
-<select id="rankDuration" onchange="loadRanking()">
-<option value="5">5秒</option>
-<option value="10">10秒</option>
-<option value="30">30秒</option>
-<option value="60">60秒</option>
-</select>
-<button onclick="loadRanking()">更新</button>
-<p id="rankStatus">ランキングを読み込みます</p>
-<table>
-<thead><tr><th>順位</th><th>名前</th><th>回数</th></tr></thead>
-<tbody id="rankRows"></tbody>
-</table>
 </div>
 </section>
 
@@ -101,49 +95,78 @@ footer{text-align:center;padding:25px;opacity:.5}
 <div id="laps"></div>
 </div>
 </section>
+
+<section id="roulette" class="page">
+<div class="panel">
+<h2>🎡 ルーレット</h2>
+<p class="small">最大50個まで登録できます。</p>
+<h3>項目をまとめて入力</h3>
+<textarea id="bulkItems" placeholder="りんご&#10;みかん&#10;ぶどう&#10;バナナ"></textarea>
+<button onclick="addBulk()">列挙した項目を追加</button>
+
+<div class="panel">
+<h3>数字の範囲で作成</h3>
+<div class="range-row">
+<span>開始</span><input type="number" id="rangeFrom" value="1">
+<span>～</span><input type="number" id="rangeTo" value="10">
+</div>
+<button onclick="addRange()">数字を追加</button>
+<p class="small">例：1～10なら1から10まで登録します。</p>
+</div>
+
+<h3>項目と当選確率</h3>
+<p class="small">％欄を全部空欄にすると均等になります。<br>確率を指定する場合は合計100％にしてください。</p>
+<div id="options"></div>
+<div class="modes">
+<button onclick="addOne()">＋ 項目を追加</button>
+<button onclick="clearOptions()">全部削除</button>
+</div>
+<p id="optionCount">0 / 50 項目</p>
+
+<div id="rouletteWrap">
+<div id="pointer"></div>
+<canvas id="wheel" width="600" height="600"></canvas>
+<button id="spinButton" onclick="spin()">START</button>
+</div>
+<div class="result" id="rouletteResult">結果はここに表示されます</div>
+<button onclick="resetWheel()">ルーレットをリセット</button>
+</div>
+</section>
 </main>
 <footer>TAP POWER</footer>
 
 <script>
-// オンラインランキングAPIのURLを設定
-const API_URL="https://YOUR-API-SERVICE.onrender.com";
-
-let duration=5,count=0,running=false,finished=false;
-let startTime=0,timer=null,lastScore=null;
-const area=document.getElementById("tapArea");
-
-function page(id,btn){
- document.querySelectorAll(".page").forEach(x=>x.classList.remove("show"));
+function openPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
  document.getElementById(id).classList.add("show");
- document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
- btn.classList.add("active");
- if(id==="ranking")loadRanking();
+ window.scrollTo(0,0);
 }
+function goHome(){openPage("home")}
 function theme(){document.body.classList.toggle("light")}
+
+// 連打測定
+let duration=5,count=0,running=false;
+let tapStart=0,tapTimer=null;
+const tapArea=document.getElementById("tapArea");
 
 function choose(n,btn){
  if(running)return;
  duration=n;
- document.querySelectorAll(".modes button").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll("#tap .modes button").forEach(b=>b.classList.remove("active"));
  btn.classList.add("active");
- reset();
+ resetTap();
 }
-
-function reset(){
- clearInterval(timer);
- running=false;finished=false;count=0;lastScore=null;
+function resetTap(){
+ clearInterval(tapTimer);running=false;count=0;
  document.getElementById("count").textContent="0";
  document.getElementById("timer").textContent=duration.toFixed(2);
  document.getElementById("status").textContent="スタートを押してください";
  document.getElementById("start").disabled=false;
- document.getElementById("submit").disabled=true;
- document.getElementById("message").textContent="";
- area.disabled=true;area.textContent="ここを連打！";
+ tapArea.disabled=true;tapArea.textContent="ここを連打！";
 }
-
-function start(){
+function startTap(){
  if(running)return;
- reset();
+ resetTap();
  document.getElementById("start").disabled=true;
  let n=3;
  document.getElementById("status").textContent="3";
@@ -151,99 +174,40 @@ function start(){
   n--;
   if(n>0){document.getElementById("status").textContent=n;return}
   if(n===0){document.getElementById("status").textContent="GO!";return}
-  clearInterval(cd);
-  begin();
+  clearInterval(cd);beginTap();
  },1000);
 }
-
-function begin(){
- running=true;finished=false;count=0;
- startTime=performance.now();
- area.disabled=false;area.textContent="TAP!";
+function beginTap(){
+ running=true;count=0;tapStart=performance.now();
+ tapArea.disabled=false;tapArea.textContent="TAP!";
  document.getElementById("status").textContent="連打中！";
- timer=setInterval(()=>{
-  let left=Math.max(0,duration-(performance.now()-startTime)/1000);
+ tapTimer=setInterval(()=>{
+  const left=Math.max(0,duration-(performance.now()-tapStart)/1000);
   document.getElementById("timer").textContent=left.toFixed(2);
-  if(left<=0)finish();
+  if(left<=0){
+   running=false;clearInterval(tapTimer);
+   tapArea.disabled=true;tapArea.textContent="終了！";
+   document.getElementById("status").textContent=`結果：${count}回`;
+   document.getElementById("start").disabled=false;
+  }
  },20);
 }
-
-area.addEventListener("pointerdown",e=>{
+tapArea.addEventListener("pointerdown",e=>{
  if(!running)return;
- e.preventDefault();
- count++;
+ e.preventDefault();count++;
  document.getElementById("count").textContent=count;
 });
 
-function finish(){
- if(!running)return;
- running=false;finished=true;clearInterval(timer);
- lastScore=count;
- area.disabled=true;area.textContent="終了！";
- document.getElementById("timer").textContent="0.00";
- document.getElementById("status").textContent=`結果：${count}回`;
- document.getElementById("start").disabled=false;
- document.getElementById("submit").disabled=false;
-}
-
-async function save(){
- if(!finished||lastScore===null)return;
- const name=document.getElementById("nickname").value.trim();
- if(!name){alert("ニックネームを入力してください");return}
- const btn=document.getElementById("submit");
- btn.disabled=true;
- try{
-  const r=await fetch(API_URL+"/scores",{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({name,score:lastScore,duration})
-  });
-  if(!r.ok)throw Error();
-  document.getElementById("message").textContent="登録しました！";
- }catch(e){
-  document.getElementById("message").textContent="登録できません。API設定を確認してください。";
-  btn.disabled=false;
- }
-}
-
-async function loadRanking(){
- const rows=document.getElementById("rankRows");
- const status=document.getElementById("rankStatus");
- rows.innerHTML="";
- status.textContent="読み込み中...";
- const d=document.getElementById("rankDuration").value;
- try{
-  const r=await fetch(`${API_URL}/scores?duration=${d}`);
-  if(!r.ok)throw Error();
-  const data=await r.json();
-  if(!data.length){status.textContent="まだ記録がありません";return}
-  status.textContent=`${d}秒ランキング`;
-  data.forEach((v,i)=>{
-   const tr=document.createElement("tr");
-   [i+1,v.name,v.score].forEach(x=>{
-    const td=document.createElement("td");
-    td.textContent=x;
-    tr.appendChild(td);
-   });
-   rows.appendChild(tr);
-  });
- }catch(e){
-  status.textContent="ランキングサーバーに接続できません";
- }
-}
-
 // ストップウォッチ
-let watchRunning=false,watchBase=0,watchStartAt=0,frame=null;
-function format(ms){
- let m=Math.floor(ms/60000);
- let s=Math.floor(ms/1000)%60;
- let cs=Math.floor(ms%1000/10);
+let watchRunning=false,watchBase=0,watchStartAt=0,watchFrame=null;
+function formatTime(ms){
+ const m=Math.floor(ms/60000),s=Math.floor(ms/1000)%60,cs=Math.floor(ms%1000/10);
  return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(cs).padStart(2,"0")}`;
 }
 function watchTick(){
  if(!watchRunning)return;
- document.getElementById("watchDisplay").textContent=format(watchBase+performance.now()-watchStartAt);
- frame=requestAnimationFrame(watchTick);
+ document.getElementById("watchDisplay").textContent=formatTime(watchBase+performance.now()-watchStartAt);
+ watchFrame=requestAnimationFrame(watchTick);
 }
 function watchStart(){
  if(watchRunning)return;
@@ -251,15 +215,15 @@ function watchStart(){
 }
 function watchStop(){
  if(!watchRunning)return;
- watchBase+=performance.now()-watchStartAt;
- watchRunning=false;cancelAnimationFrame(frame);
- document.getElementById("watchDisplay").textContent=format(watchBase);
+ watchBase+=performance.now()-watchStartAt;watchRunning=false;
+ cancelAnimationFrame(watchFrame);
+ document.getElementById("watchDisplay").textContent=formatTime(watchBase);
 }
 function lap(){
  if(!watchRunning&&!watchBase)return;
- let value=watchBase+(watchRunning?performance.now()-watchStartAt:0);
- let div=document.createElement("div");
- div.textContent=`ラップ ${document.getElementById("laps").children.length+1}：${format(value)}`;
+ const v=watchBase+(watchRunning?performance.now()-watchStartAt:0);
+ const div=document.createElement("div");
+ div.textContent=`ラップ ${document.getElementById("laps").children.length+1}：${formatTime(v)}`;
  document.getElementById("laps").prepend(div);
 }
 function watchReset(){
@@ -267,6 +231,146 @@ function watchReset(){
  document.getElementById("watchDisplay").textContent="00:00.00";
  document.getElementById("laps").innerHTML="";
 }
+
+// ルーレット
+const MAX_ITEMS=50;
+const COLORS=["#ff5252","#ff9800","#ffeb3b","#8bc34a","#00bcd4","#2196f3","#673ab7","#e91e63","#ff7043","#26a69a","#ab47bc","#42a5f5","#d4e157","#ec407a","#7e57c2","#26c6da","#ffa726","#66bb6a"];
+let items=[],angle=0,spinning=false;
+const canvas=document.getElementById("wheel");
+const ctx=canvas.getContext("2d");
+
+function addOne(){
+ if(items.length>=MAX_ITEMS){alert("最大50個までです");return}
+ items.push({name:"項目"+(items.length+1),percent:""});
+ renderOptions();
+}
+function addBulk(){
+ const lines=document.getElementById("bulkItems").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ if(!lines.length){alert("項目を入力してください");return}
+ if(items.length+lines.length>MAX_ITEMS){alert("最大50個までです");return}
+ lines.forEach(name=>items.push({name,percent:""}));
+ document.getElementById("bulkItems").value="";
+ renderOptions();
+}
+function addRange(){
+ const from=Number(document.getElementById("rangeFrom").value);
+ const to=Number(document.getElementById("rangeTo").value);
+ if(!Number.isSafeInteger(from)||!Number.isSafeInteger(to)||to<from){alert("数字の範囲を正しく入力してください");return}
+ const amount=to-from+1;
+ if(amount>MAX_ITEMS||items.length+amount>MAX_ITEMS){alert("最大50個までです");return}
+ for(let n=from;n<=to;n++)items.push({name:String(n),percent:""});
+ renderOptions();
+}
+function removeItem(i){
+ if(spinning)return;
+ items.splice(i,1);renderOptions();
+}
+function clearOptions(){
+ if(spinning)return;
+ items=[];angle=0;renderOptions();
+ document.getElementById("rouletteResult").textContent="結果はここに表示されます";
+}
+function renderOptions(){
+ const box=document.getElementById("options");box.innerHTML="";
+ items.forEach((item,i)=>{
+  const row=document.createElement("div");row.className="option-row";
+  const name=document.createElement("input");
+  name.value=item.name;name.placeholder="項目名";name.maxLength=40;
+  name.addEventListener("input",()=>{items[i].name=name.value;drawWheel()});
+  const pct=document.createElement("input");
+  pct.type="number";pct.min="0";pct.max="100";pct.step="any";
+  pct.placeholder="%";pct.value=item.percent;
+  pct.addEventListener("input",()=>{items[i].percent=pct.value});
+  const del=document.createElement("button");del.textContent="×";
+  del.onclick=()=>removeItem(i);
+  row.append(name,pct,del);box.appendChild(row);
+ });
+ document.getElementById("optionCount").textContent=items.length+" / 50 項目";
+ drawWheel();
+}
+function probabilities(){
+ if(!items.length)throw Error("項目を登録してください");
+ const specified=items.some(x=>x.percent.trim()!=="");
+ if(!specified)return items.map(()=>1/items.length);
+ const vals=items.map(x=>x.percent.trim()===""?0:Number(x.percent));
+ if(vals.some(x=>!Number.isFinite(x)||x<0||x>100))throw Error("確率は0～100で入力してください");
+ const total=vals.reduce((a,b)=>a+b,0);
+ if(Math.abs(total-100)>0.001)throw Error("指定した確率の合計を100％にしてください");
+ if(total===0)throw Error("確率を入力してください");
+ return vals.map(x=>x/total);
+}
+function drawWheel(){
+ ctx.clearRect(0,0,600,600);
+ if(!items.length){
+  ctx.beginPath();ctx.arc(300,300,290,0,Math.PI*2);ctx.fillStyle="#39466b";ctx.fill();
+  ctx.fillStyle="white";ctx.font="28px Arial";ctx.textAlign="center";ctx.fillText("項目を追加",300,310);
+  return;
+ }
+ let probs;
+ try{probs=probabilities()}catch(e){probs=items.map(()=>1/items.length)}
+ const totalAngle=Math.PI*2;
+ let a=-Math.PI/2+angle;
+ items.forEach((item,i)=>{
+  const span=totalAngle*probs[i];
+  if(span<=0)return;
+  ctx.beginPath();ctx.moveTo(300,300);
+  ctx.arc(300,300,290,a,a+span);ctx.closePath();
+  ctx.fillStyle=COLORS[i%COLORS.length];ctx.fill();
+  ctx.strokeStyle="white";ctx.lineWidth=3;ctx.stroke();
+  ctx.save();ctx.translate(300,300);ctx.rotate(a+span/2);
+  ctx.textAlign="right";ctx.textBaseline="middle";
+  ctx.fillStyle="#172033";ctx.font="bold 20px Arial";
+  let label=item.name;
+  if(label.length>12)label=label.slice(0,11)+"…";
+  ctx.fillText(label,270,0);ctx.restore();
+  a+=span;
+ });
+ ctx.beginPath();ctx.arc(300,300,35,0,Math.PI*2);
+ ctx.fillStyle="white";ctx.fill();
+}
+function chooseWinner(probs){
+ let r=Math.random(),sum=0;
+ for(let i=0;i<probs.length;i++){sum+=probs[i];if(r<sum)return i}
+ return probs.length-1;
+}
+function spin(){
+ if(spinning)return;
+ let probs;
+ try{probs=probabilities()}catch(e){alert(e.message);return}
+ spinning=true;
+ document.getElementById("spinButton").disabled=true;
+ document.getElementById("rouletteResult").textContent="回転中...";
+ const winner=chooseWinner(probs);
+ let before=0;
+ for(let i=0;i<winner;i++)before+=probs[i]*Math.PI*2;
+ const middle=before+probs[winner]*Math.PI;
+ const target=-Math.PI/2-middle;
+ const current=angle;
+ const fullTurns=8+Math.floor(Math.random()*4);
+ const normalized=((target-current)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+ const end=current+fullTurns*Math.PI*2+normalized;
+ const start=performance.now(),durationMs=5000;
+ function animate(now){
+  let t=Math.min(1,(now-start)/durationMs);
+  let eased=1-Math.pow(1-t,4);
+  angle=current+(end-current)*eased;
+  drawWheel();
+  if(t<1){requestAnimationFrame(animate)}
+  else{
+   angle=((angle%(Math.PI*2))+Math.PI*2)%(Math.PI*2);
+   drawWheel();spinning=false;
+   document.getElementById("spinButton").disabled=false;
+   document.getElementById("rouletteResult").textContent="🎉 "+items[winner].name+" 🎉";
+  }
+ }
+ requestAnimationFrame(animate);
+}
+function resetWheel(){
+ if(spinning)return;
+ angle=0;drawWheel();
+ document.getElementById("rouletteResult").textContent="結果はここに表示されます";
+}
+renderOptions();
 </script>
 </body>
 </html>
